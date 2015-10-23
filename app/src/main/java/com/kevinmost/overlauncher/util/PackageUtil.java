@@ -6,6 +6,10 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.support.annotation.NonNull;
+import android.support.annotation.WorkerThread;
+import android.util.Log;
+import android.widget.Toast;
+import com.kevinmost.overlauncher.BuildConfig;
 import com.kevinmost.overlauncher.app.App;
 import com.kevinmost.overlauncher.model.InstalledApp;
 
@@ -40,7 +44,9 @@ public class PackageUtil {
         .setComponent(componentName);
   }
 
-  public @NonNull List<InstalledApp> getInstalledPackages() {
+  @WorkerThread
+  @NonNull
+  public List<InstalledApp> getInstalledPackages() {
     final Intent launcherIntent = new Intent(Intent.ACTION_MAIN, null);
     launcherIntent.addCategory(Intent.CATEGORY_LAUNCHER);
     final List<ResolveInfo> packages = packageManager.queryIntentActivities(launcherIntent, 0);

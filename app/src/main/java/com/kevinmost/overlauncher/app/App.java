@@ -4,6 +4,7 @@ import android.app.Application;
 import com.kevinmost.overlauncher.dagger.AppComponent;
 import com.kevinmost.overlauncher.dagger.AppModule;
 import com.kevinmost.overlauncher.dagger.DaggerAppComponent;
+import com.kevinmost.overlauncher.service.AppsCacheProvider;
 
 public class App extends Application {
   private static App INSTANCE;
@@ -26,5 +27,6 @@ public class App extends Application {
   public void onCreate() {
     super.onCreate();
     App.setInstance(this);
+    AppsCacheProvider.start(this);
   }
 }

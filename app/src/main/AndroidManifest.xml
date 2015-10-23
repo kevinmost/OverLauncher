@@ -38,6 +38,10 @@
       </intent-filter>
     </receiver>
 
+    <service
+      android:name=".service.AppsCacheProvider"
+      android:enabled="true"/>
+
   </application>
 
 </manifest>
