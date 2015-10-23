@@ -97,7 +97,7 @@ public class AppsCache {
     Collections.sort(installedApps, new Comparator<InstalledApp>() {
       @Override
       public int compare(InstalledApp lhs, InstalledApp rhs) {
-        return lhs.label.toString().compareTo(rhs.label.toString());
+        return lhs.label.toString().toLowerCase().compareTo(rhs.label.toString().toLowerCase());
       }
     });
     new AsyncTask<Void, Void, Void>() {
