@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
 import com.kevinmost.overlauncher.app.App;
-import com.kevinmost.overlauncher.util.AppsCache;
 import com.kevinmost.overlauncher.util.PackageUtil;
 import com.kevinmost.overlauncher.util.ViewUtil;
 import com.squareup.okhttp.OkHttpClient;
@@ -27,7 +26,6 @@ public interface AppComponent {
   Picasso providePicasso();
   Bus provideBus();
 
-  AppsCache provideAppsCache();
   PackageUtil providePackageUtil();
   ViewUtil provideViewUtil();
 }

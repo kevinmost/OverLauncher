@@ -8,16 +8,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.kevinmost.overlauncher.R;
 import com.kevinmost.overlauncher.app.App;
 import com.kevinmost.overlauncher.dagger.AppComponent;
-import com.kevinmost.overlauncher.event.AppsCacheUpdatedEvent;
+import com.kevinmost.overlauncher.event.AppsListEvent;
 import com.kevinmost.overlauncher.event.FilterChangedEvent;
+import com.kevinmost.overlauncher.event.RequestAppsListEvent;
 import com.kevinmost.overlauncher.model.InstalledApp;
-import com.kevinmost.overlauncher.util.AppsCache;
 import com.kevinmost.overlauncher.util.PackageUtil;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -27,21 +26,20 @@ import java.util.List;
 
 public class InstalledAppsAdapter extends BaseAdapter {
 
-  private final Bus bus;
   private String filter;
+  private List<InstalledApp> allAppsCache = new ArrayList<>();
   private List<InstalledApp> shownAppsCache = new ArrayList<>();
 
   private final LayoutInflater inflater;
   private final App app;
-  private final AppsCache appsCache;
 
   public InstalledAppsAdapter() {
     final AppComponent component = App.provideComponent();
-    bus = component.provideBus();
-    bus.register(this);
     inflater = component.provideLayoutInflater();
     app = component.provideApp();
-    appsCache = component.provideAppsCache();
+    final Bus bus = component.provideBus();
+    bus.register(this);
+    bus.post(new RequestAppsListEvent());
   }
 
   @Subscribe
@@ -51,7 +49,8 @@ public class InstalledAppsAdapter extends BaseAdapter {
   }
 
   @Subscribe
-  public void onAppsCacheUpdatedEvent(AppsCacheUpdatedEvent event) {
+  public void onAppsCacheUpdated(AppsListEvent event) {
+    allAppsCache = event.apps;
     notifyDataSetChanged();
   }
 
@@ -98,10 +97,7 @@ public class InstalledAppsAdapter extends BaseAdapter {
 
   @Override
   public void notifyDataSetChanged() {
-    if (appsCache != null) {
-      final List<InstalledApp> installedApps = appsCache.getInstalledApps();
-      shownAppsCache = filter(installedApps, filter, PackageUtil.FilterMode.ONLY_START_OF_WORDS);
-    }
+    shownAppsCache = filter(allAppsCache, filter, PackageUtil.FilterMode.ONLY_START_OF_WORDS);
     super.notifyDataSetChanged();
   }
 

@@ -5,14 +5,10 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
-import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnTextChanged;
@@ -35,18 +31,19 @@ public class OverlayActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     final AppComponent component = App.provideComponent();
     final ViewUtil viewUtil = component.provideViewUtil();
-    initBottomSheetDialog(viewUtil);
+    initBottomSheetDialog(viewUtil.getDisplayDimensions().y);
     bus = component.provideBus();
     bus.register(this);
     makeWindowTransparent();
   }
 
-  private void initBottomSheetDialog(ViewUtil viewUtil) {
+  private void initBottomSheetDialog(int screenHeight) {
+    final int animationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
     final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
     bottomSheetDialog.contentView(R.layout.activity_overlay)
-        .heightParam((int) (viewUtil.getDisplayDimensions().y * 0.75F))
-        .inDuration(300)
-        .outDuration(300)
+        .heightParam((int) (screenHeight * 0.75F))
+        .inDuration(animationDuration)
+        .outDuration(animationDuration)
         .show();
     bottomSheetViewHolder = new BottomSheetViewHolder(bottomSheetDialog);
   }
